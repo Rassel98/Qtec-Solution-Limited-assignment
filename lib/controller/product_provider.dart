@@ -35,7 +35,7 @@ get data=>productsModel!=null;
  void getCurrentData(String value)async {
     final uri=Uri.parse('https://panel.supplyline.network/api/product/search-suggestions/?limit=10&offset=10&search=$value');
     try{
-      print('calling api');
+      print('calling api      ');
 
       final response= await get(uri);
       final map=jsonDecode(response.body);

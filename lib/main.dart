@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qtec_assignment/controller/product_provider.dart';
 
+import 'view/product_details_page.dart';
 import 'view/search_page.dart';
 
 void main() {
@@ -22,7 +23,11 @@ class MyApp extends StatelessWidget {
         backgroundColor: const Color(0xFFE5E5E5),
 
       ),
-      home: const SearchPage(),
+      initialRoute: SearchPage.routeName,
+      routes: {
+        ProductDetailsPage.routeName:(context) => ProductDetailsPage(),
+        SearchPage.routeName:(context) => SearchPage()
+      },
     );
   }
 }

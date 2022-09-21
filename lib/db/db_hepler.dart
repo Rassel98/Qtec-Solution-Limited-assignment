@@ -10,17 +10,21 @@ class DBHelper{
 
     //GET
     static Future<dynamic> getSearchData(String api) async {
-      var url = Uri.parse(baseUrl + api);
-      // var _headers = {
-      //   'Authorization': 'Bearer sfie328370428387=',
-      //   'api_key': 'ief873fj38uf38uf83u839898989',
-      // };
+      try{
+        var url = Uri.parse(baseUrl + api);
+        // var _headers = {
+        //   'Authorization': 'Bearer sfie328370428387=',
+        //   'api_key': 'ief873fj38uf38uf83u839898989',
+        // };
 
-      var response = await client.get(url);
-      if (response.statusCode == 200) {
-        return response.body;
-      } else {
-        //throw exception and catch it in UI
+        var response = await client.get(url);
+        if (response.statusCode == 200) {
+          return response.body;
+        } else {
+          //throw exception and catch it in UI
+        }
+      }catch(e){
+
       }
     }
 

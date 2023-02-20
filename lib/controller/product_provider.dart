@@ -1,70 +1,75 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:qtec_assignment/model/product_details.dart';
-
-import '../db/db_hepler.dart';
+import 'package:http/http.dart' as http;
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../model/product.dart';
 
 class ProductProvider extends ChangeNotifier {
-  ProductsModel? productsModel;
 
-  ProductDetailsModel? productDetailsModel;
-  // Product? product;
-  // getData() async {
-  //   var response = await DBHelper.getSearchData('/product/search-suggestions/?limit=10&offset=10&search=rice')
-  //       .catchError((err) {});
-  //   if (response == null) return;
-  //   debugPrint('successful:');
-  //
-  //   productsModel=productsModelFromJson(response);
-  //   //product=Product.fromJson(response);
-  //
-  //
-  //
-  //   //users = userFromJson(response);
-  //
-  //   debugPrint('Product count: ${productsModel!.data!.products!.results!.length}');
-  //   //debugPrint('Product count: ${product!.data!.products!.count}');
-  //   notifyListeners();
-  // }
-  //
-  get data => productsModel != null;
+  ProductModel? productDetailsModel;
+  List<ProductModel> allResult = [];
+  get data => allResult != [];
+  late List<ProductModel> limitList = [];
+  final refreshController = RefreshController(initialRefresh: false);
+  var currentPage = 10;
 
-  void getCurrentData(String value) async {
+  Future<bool> getCurrentData(String value, {bool isRefresh = false}) async {
+    if (isRefresh) {
+      currentPage = 10;
+    }
     try {
-      print('calling api      ');
-      var response = await DBHelper.getSearchData(
-          '/product/search-suggestions/?limit=10&offset=10&search=$value');
-      final map = jsonDecode(response);
-      print('get map api');
+      final url = Uri.parse(
+          'https://panel.supplyline.network/api/product/search-suggestions/?format=json&limit=$currentPage&offset=10&search=$value');
 
-      print('response ok api');
-      productsModel = ProductsModel.fromJson(map);
-      print(
-          'Total Products  ${productsModel!.data!.products!.results!.length} ');
-      notifyListeners();
+      http.Response response =
+          await http.get(url, headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        final responseJson = json.decode(utf8.decode(response.bodyBytes));
+        print(responseJson['data']['products']['results']);
+
+        limitList = responseJson['data']['products']['results']
+            .map<ProductModel>((item) => ProductModel.fromJson(item))
+            .toList();
+        print('Total Products resultList ${limitList.length}');
+
+        if (isRefresh) {
+          allResult = limitList;
+        } else {
+          if (limitList.isEmpty) {
+            refreshController.loadNoData();
+          }
+          allResult.addAll(limitList);
+        }
+        currentPage+=10;
+        notifyListeners();
+        return true;
+      }
     } catch (err) {
       rethrow;
     }
+    return false;
+
   }
 
- void getDetails(String api) async {
+  void getDetails(String slug) async {
+    print(slug);
     try {
-      print('calling api      ');
-      var response = await DBHelper.getSearchData(
-          '/product-details/-0vl5/');
-      final map = jsonDecode(response);
-      print('get map api');
+      final url = Uri.parse(
+          'https://panel.supplyline.network/api/product-details/$slug/');
 
-      print('response ok api');
-      productDetailsModel = ProductDetailsModel.fromJson(map);
-      print(
-          'Total Products  ${productDetailsModel!.data!.description} ');
+      http.Response response =
+          await http.get(url, headers: {'Content-Type': 'application/json'});
+      if(response.statusCode==200){
+        final responseJson = json.decode(utf8.decode(response.bodyBytes));
+        print(responseJson['data']);
+        productDetailsModel = ProductModel.fromJson(responseJson['data']);
+      }
+
       notifyListeners();
     } catch (err) {
       rethrow;
     }
+
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qtec_assignment/controller/product_provider.dart';
-
 import 'view/product_details_page.dart';
 import 'view/search_page.dart';
 
@@ -18,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         backgroundColor: const Color(0xFFE5E5E5),

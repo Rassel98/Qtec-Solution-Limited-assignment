@@ -1,110 +1,6 @@
-class ProductsModel {
-  ProductsModel({
-    this.status,
-    this.data,});
 
-  ProductsModel.fromJson(dynamic json) {
-    status = json['status'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
-  }
-  String? status;
-  Data? data;
-  ProductsModel copyWith({  String? status,
-    Data? data,
-  }) => ProductsModel(  status: status ?? this.status,
-    data: data ?? this.data,
-  );
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['status'] = status;
-    if (data != null) {
-      map['data'] = data?.toJson();
-    }
-    return map;
-  }
-
-}
-
-class Data {
-  Data({
-    this.categories,
-    this.products,});
-
-  Data.fromJson(dynamic json) {
-    if (json['categories'] != null) {
-      categories = [];
-      json['categories'].forEach((v) {
-        categories?.add(v);
-      });
-    }
-    products = json['products'] != null ? Products.fromJson(json['products']) : null;
-  }
-  List<String>? categories;
-  Products? products;
-// Data copyWith({  List<dynamic>? categories,
-//   Products? products,
-// }) => Data(  categories: categories! ?? this.categories,
-//   products: products ?? this.products,
-// );
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (categories != null) {
-      // map['categories'] = categories?.map((v) => v.toJson()).toList();
-    }
-    if (products != null) {
-      map['products'] = products?.toJson();
-    }
-    return map;
-  }
-
-}
-
-class Products {
-  Products({
-    this.count,
-    this.next,
-    this.previous,
-    this.results,});
-
-  Products.fromJson(dynamic json) {
-    count = json['count'];
-    next = json['next'];
-    previous = json['previous'];
-    if (json['results'] != null) {
-      results = [];
-      json['results'].forEach((v) {
-        results?.add(Results.fromJson(v));
-      });
-    }
-  }
-  num? count;
-  String? next;
-  String? previous;
-  List<Results>? results;
-  Products copyWith({  num? count,
-    String? next,
-    String? previous,
-    List<Results>? results,
-  }) => Products(  count: count ?? this.count,
-    next: next ?? this.next,
-    previous: previous ?? this.previous,
-    results: results ?? this.results,
-  );
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['count'] = count;
-    map['next'] = next;
-    map['previous'] = previous;
-    if (results != null) {
-      map['results'] = results?.map((v) => v.toJson()).toList();
-    }
-    return map;
-  }
-
-}
-
-class Results {
-  Results({
+class ProductModel {
+  ProductModel({
     this.id,
     this.brand,
     this.image,
@@ -142,7 +38,7 @@ class Results {
     this.relatedProduct,
     this.filterValue,});
 
-  Results.fromJson(dynamic json) {
+  ProductModel.fromJson(dynamic json) {
     id = json['id'];
     brand = json['brand'] != null ? Brand.fromJson(json['brand']) : null;
     image = json['image'];
@@ -231,7 +127,7 @@ class Results {
   List<num>? category;
   List<dynamic>? relatedProduct;
   List<dynamic>? filterValue;
-  Results copyWith({  num? id,
+  ProductModel copyWith({  num? id,
     Brand? brand,
     String? image,
     Charge? charge,
@@ -267,7 +163,7 @@ class Results {
     List<num>? category,
     List<dynamic>? relatedProduct,
     List<dynamic>? filterValue,
-  }) => Results(  id: id ?? this.id,
+  }) => ProductModel(  id: id ?? this.id,
     brand: brand ?? this.brand,
     image: image ?? this.image,
     charge: charge ?? this.charge,
